@@ -1,143 +1,1546 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Truck Arrival Monitoring System</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Truck Arrival Monitoring System</title>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            background: #f4f6f8;
-        }
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
 
-        header {
-            background: #222;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f6f9;
+    color: #1f2937;
+}
 
-        .container {
-            padding: 20px;
-        }
+/* HEADER */
+.header {
+    background: #111827;
+    color: white;
+    padding: 22px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-        }
+.header h1 {
+    font-size: 24px;
+}
 
-        input, select, button {
-            padding: 10px;
-            margin: 5px;
-        }
+.header p {
+    margin-top: 5px;
+    color: #cbd5e1;
+    font-size: 14px;
+}
 
-        button {
-            cursor: pointer;
-        }
+.clock {
+    font-size: 15px;
+    font-weight: bold;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }
+/* CONTAINER */
+.container {
+    max-width: 1500px;
+    margin: auto;
+    padding: 25px;
+}
 
-        th, td {
-            border: 1px solid #ddd;
-            padding: 10px;
-            text-align: center;
-        }
+/* DASHBOARD */
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
 
-        th {
-            background: #eee;
-        }
-    </style>
+.card {
+    background: white;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+    border-left: 5px solid #64748b;
+}
+
+.card h3 {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 10px;
+}
+
+.card .number {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* COLORS */
+.total { border-left-color: #2563eb; }
+.arrived { border-left-color: #eab308; }
+.waiting { border-left-color: #f97316; }
+.loading { border-left-color: #3b82f6; }
+.completed { border-left-color: #16a34a; }
+.delayed { border-left-color: #dc2626; }
+
+/* SECTION */
+.section {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0,0,0,.08);
+}
+
+.section-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-title h2 {
+    font-size: 20px;
+}
+
+/* BUTTON */
+button {
+    border: none;
+    border-radius: 7px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-secondary {
+    background: #64748b;
+    color: white;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-success {
+    background: #16a34a;
+    color: white;
+}
+
+/* FORM */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group label {
+    font-size: 13px;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #475569;
+}
+
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    font-size: 14px;
+    outline: none;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #2563eb;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.full {
+    grid-column: 1 / -1;
+}
+
+.form-buttons {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+/* SEARCH */
+.filters {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+/* TABLE */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1250px;
+}
+
+th {
+    background: #1e293b;
+    color: white;
+    padding: 13px 10px;
+    text-align: left;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+td {
+    padding: 12px 10px;
+    border-bottom: 1px solid #e2e8f0;
+    font-size: 13px;
+    white-space: nowrap;
+}
+
+tr:hover {
+    background: #f8fafc;
+}
+
+/* STATUS */
+.status {
+    display: inline-block;
+    padding: 5px 9px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.status-arrived {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-waiting {
+    background: #ffedd5;
+    color: #9a3412;
+}
+
+.status-loading {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-completed {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-delayed {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-cancelled {
+    background: #e5e7eb;
+    color: #374151;
+}
+
+/* ACTIONS */
+.actions {
+    display: flex;
+    gap: 5px;
+}
+
+.actions button {
+    padding: 6px 9px;
+    font-size: 11px;
+}
+
+/* MODAL */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    inset: 0;
+    background: rgba(0,0,0,.55);
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.modal-content {
+    background: white;
+    width: 700px;
+    max-width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close {
+    font-size: 25px;
+    cursor: pointer;
+    color: #64748b;
+}
+
+.details-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+
+.detail {
+    background: #f8fafc;
+    padding: 12px;
+    border-radius: 7px;
+}
+
+.detail label {
+    display: block;
+    font-size: 11px;
+    color: #64748b;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.detail strong {
+    font-size: 14px;
+}
+
+/* EMPTY */
+.empty {
+    text-align: center;
+    padding: 40px;
+    color: #64748b;
+}
+
+/* RESPONSIVE */
+@media(max-width: 1000px) {
+    .dashboard {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media(max-width: 600px) {
+    .header {
+        padding: 18px;
+        display: block;
+    }
+
+    .clock {
+        margin-top: 10px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+
+    .dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .form-grid,
+    .details-grid,
+    .filters {
+        grid-template-columns: 1fr;
+    }
+
+    .section {
+        padding: 18px;
+    }
+}
+</style>
 </head>
 
 <body>
 
-<header>
-    <h1>Truck Arrival Monitoring System</h1>
-    <p>Truck Arrival & Supply Monitoring</p>
+<!-- HEADER -->
+<header class="header">
+    <div>
+        <h1>🚚 Truck Arrival Monitoring System</h1>
+        <p>Truck Arrival & Supply Monitoring</p>
+    </div>
+
+    <div class="clock" id="clock">
+        Loading...
+    </div>
 </header>
+
 
 <div class="container">
 
-    <div class="card">
-        <h2>Truck Arrival Entry</h2>
+<!-- DASHBOARD -->
+<div class="dashboard">
 
-        <input type="text" id="truckNumber" placeholder="Truck Number">
-
-        <input type="text" id="driverName" placeholder="Driver Name">
-
-        <input type="text" id="origin" placeholder="Origin">
-
-        <select id="status">
-            <option value="Arrived">Arrived</option>
-            <option value="Waiting">Waiting</option>
-            <option value="Loading">Loading</option>
-            <option value="Completed">Completed</option>
-        </select>
-
-        <button onclick="addTruck()">Add Truck</button>
+    <div class="card total">
+        <h3>TOTAL TRUCKS</h3>
+        <div class="number" id="totalCount">0</div>
     </div>
 
-    <div class="card">
-        <h2>Truck Monitoring</h2>
+    <div class="card arrived">
+        <h3>ARRIVED</h3>
+        <div class="number" id="arrivedCount">0</div>
+    </div>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Truck No.</th>
-                    <th>Driver</th>
-                    <th>Origin</th>
-                    <th>Arrival Time</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
+    <div class="card waiting">
+        <h3>WAITING</h3>
+        <div class="number" id="waitingCount">0</div>
+    </div>
 
-            <tbody id="truckTable">
-            </tbody>
-        </table>
+    <div class="card loading">
+        <h3>LOADING</h3>
+        <div class="number" id="loadingCount">0</div>
+    </div>
+
+    <div class="card completed">
+        <h3>COMPLETED</h3>
+        <div class="number" id="completedCount">0</div>
+    </div>
+
+    <div class="card delayed">
+        <h3>DELAYED</h3>
+        <div class="number" id="delayedCount">0</div>
     </div>
 
 </div>
 
+
+<!-- ADD TRUCK -->
+<section class="section">
+
+    <div class="section-title">
+        <h2>🚛 Truck Arrival Entry</h2>
+    </div>
+
+    <form id="truckForm">
+
+        <input type="hidden" id="editId">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Truck No.</label>
+                <input type="text" id="truckNo" placeholder="e.g. TRK-001" required>
+            </div>
+
+            <div class="form-group">
+                <label>Driver Name</label>
+                <input type="text" id="driver" placeholder="Driver name" required>
+            </div>
+
+            <div class="form-group">
+                <label>Plate No.</label>
+                <input type="text" id="plate" placeholder="ABC-1234">
+            </div>
+
+            <div class="form-group">
+                <label>Truck Type</label>
+                <select id="truckType">
+                    <option value="">Select Type</option>
+                    <option>Closed Van</option>
+                    <option>Wing Van</option>
+                    <option>10 Wheeler</option>
+                    <option>6 Wheeler</option>
+                    <option>4 Wheeler</option>
+                    <option>Trailer</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Origin</label>
+                <input type="text" id="origin" placeholder="Origin / Hub" required>
+            </div>
+
+            <div class="form-group">
+                <label>Destination</label>
+                <input type="text" id="destination" placeholder="Destination">
+            </div>
+
+            <div class="form-group">
+                <label>Arrival Date</label>
+                <input type="date" id="arrivalDate" required>
+            </div>
+
+            <div class="form-group">
+                <label>Arrival Time</label>
+                <input type="time" id="arrivalTime" required>
+            </div>
+
+            <div class="form-group">
+                <label>Booking / Trip No.</label>
+                <input type="text" id="booking" placeholder="Booking number">
+            </div>
+
+            <div class="form-group">
+                <label>Supply Type</label>
+                <select id="supplyType">
+                    <option value="">Select Supply</option>
+                    <option>Parcel</option>
+                    <option>Bag</option>
+                    <option>Empty Equipment</option>
+                    <option>Mixed</option>
+                    <option>Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Parcel / Bag Quantity</label>
+                <input type="number" id="quantity" placeholder="0" min="0">
+            </div>
+
+            <div class="form-group">
+                <label>Status</label>
+                <select id="status" required>
+                    <option value="Arrived">Arrived</option>
+                    <option value="Waiting">Waiting</option>
+                    <option value="Loading">Loading</option>
+                    <option value="Completed">Completed</option>
+                    <option value="Delayed">Delayed</option>
+                    <option value="Cancelled">Cancelled</option>
+                </select>
+            </div>
+
+            <div class="form-group full">
+                <label>Remarks</label>
+                <textarea id="remarks" rows="3"
+                    placeholder="Enter remarks / notes..."></textarea>
+            </div>
+
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn-primary" id="saveBtn">
+                ➕ Add Truck
+            </button>
+
+            <button type="button" class="btn-secondary"
+                    onclick="resetForm()">
+                Clear
+            </button>
+        </div>
+
+    </form>
+
+</section>
+
+
+<!-- TRUCK MONITORING -->
+<section class="section">
+
+    <div class="section-title">
+        <h2>📋 Truck Monitoring</h2>
+
+        <button class="btn-primary" onclick="exportCSV()">
+            📥 Export CSV
+        </button>
+    </div>
+
+
+    <!-- FILTERS -->
+    <div class="filters">
+
+        <input type="text"
+               id="searchInput"
+               placeholder="🔍 Search Truck No., Driver, Origin..."
+               oninput="renderTable()">
+
+        <select id="statusFilter" onchange="renderTable()">
+            <option value="">All Status</option>
+            <option>Arrived</option>
+            <option>Waiting</option>
+            <option>Loading</option>
+            <option>Completed</option>
+            <option>Delayed</option>
+            <option>Cancelled</option>
+        </select>
+
+        <input type="date"
+               id="dateFilter"
+               onchange="renderTable()">
+
+        <select id="originFilter" onchange="renderTable()">
+            <option value="">All Origins</option>
+        </select>
+
+    </div>
+
+
+    <!-- TABLE -->
+    <div class="table-wrapper">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Truck No.</th>
+                    <th>Driver</th>
+                    <th>Plate No.</th>
+                    <th>Truck Type</th>
+                    <th>Origin</th>
+                    <th>Destination</th>
+                    <th>Arrival Date</th>
+                    <th>Arrival Time</th>
+                    <th>Booking / Trip</th>
+                    <th>Supply</th>
+                    <th>Qty</th>
+                    <th>Status</th>
+                    <th>Waiting Time</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody id="truckTableBody"></tbody>
+
+        </table>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<!-- DETAILS MODAL -->
+<div class="modal" id="detailsModal">
+
+    <div class="modal-content">
+
+        <div class="modal-header">
+            <h2>🚛 Truck Details</h2>
+
+            <span class="close"
+                  onclick="closeModal()">×</span>
+        </div>
+
+        <div class="details-grid" id="detailsContent">
+        </div>
+
+    </div>
+
+</div>
+
+
 <script>
 
-function addTruck() {
+/* =========================
+   DATA
+========================= */
 
-    const truckNumber = document.getElementById("truckNumber").value;
-    const driverName = document.getElementById("driverName").value;
-    const origin = document.getElementById("origin").value;
-    const status = document.getElementById("status").value;
+let trucks = JSON.parse(
+    localStorage.getItem("truckMonitoringData")
+) || [];
 
-    if (!truckNumber || !driverName || !origin) {
-        alert("Please complete all fields.");
+
+/* =========================
+   CLOCK
+========================= */
+
+function updateClock() {
+
+    const now = new Date();
+
+    const date = now.toLocaleDateString(
+        "en-PH",
+        {
+            weekday: "short",
+            year: "numeric",
+            month: "short",
+            day: "numeric"
+        }
+    );
+
+    const time = now.toLocaleTimeString(
+        "en-PH",
+        {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit"
+        }
+    );
+
+    document.getElementById("clock").textContent =
+        `${date} | ${time}`;
+}
+
+setInterval(updateClock, 1000);
+updateClock();
+
+
+/* =========================
+   DEFAULT DATE & TIME
+========================= */
+
+function setDefaultDateTime() {
+
+    const now = new Date();
+
+    const date =
+        now.getFullYear() + "-" +
+        String(now.getMonth() + 1).padStart(2,"0") + "-" +
+        String(now.getDate()).padStart(2,"0");
+
+    const time =
+        String(now.getHours()).padStart(2,"0") + ":" +
+        String(now.getMinutes()).padStart(2,"0");
+
+    document.getElementById("arrivalDate").value = date;
+    document.getElementById("arrivalTime").value = time;
+}
+
+setDefaultDateTime();
+
+
+/* =========================
+   FORM SUBMIT
+========================= */
+
+document.getElementById("truckForm")
+.addEventListener("submit", function(e) {
+
+    e.preventDefault();
+
+    const editId =
+        document.getElementById("editId").value;
+
+    const truckData = {
+
+        id: editId || Date.now().toString(),
+
+        truckNo:
+            document.getElementById("truckNo").value.trim(),
+
+        driver:
+            document.getElementById("driver").value.trim(),
+
+        plate:
+            document.getElementById("plate").value.trim(),
+
+        truckType:
+            document.getElementById("truckType").value,
+
+        origin:
+            document.getElementById("origin").value.trim(),
+
+        destination:
+            document.getElementById("destination").value.trim(),
+
+        arrivalDate:
+            document.getElementById("arrivalDate").value,
+
+        arrivalTime:
+            document.getElementById("arrivalTime").value,
+
+        booking:
+            document.getElementById("booking").value.trim(),
+
+        supplyType:
+            document.getElementById("supplyType").value,
+
+        quantity:
+            document.getElementById("quantity").value || 0,
+
+        status:
+            document.getElementById("status").value,
+
+        remarks:
+            document.getElementById("remarks").value.trim(),
+
+        updatedAt:
+            new Date().toISOString()
+    };
+
+
+    if (editId) {
+
+        const index =
+            trucks.findIndex(t => t.id === editId);
+
+        if (index !== -1) {
+            trucks[index] = truckData;
+        }
+
+    } else {
+
+        trucks.unshift(truckData);
+
+    }
+
+
+    saveData();
+
+    resetForm();
+
+    alert(
+        editId
+        ? "Truck record updated successfully!"
+        : "Truck added successfully!"
+    );
+
+});
+
+
+/* =========================
+   SAVE DATA
+========================= */
+
+function saveData() {
+
+    localStorage.setItem(
+        "truckMonitoringData",
+        JSON.stringify(trucks)
+    );
+
+    renderTable();
+    updateDashboard();
+    updateOriginFilter();
+}
+
+
+/* =========================
+   RENDER TABLE
+========================= */
+
+function renderTable() {
+
+    const tbody =
+        document.getElementById("truckTableBody");
+
+    const search =
+        document.getElementById("searchInput")
+        .value
+        .toLowerCase();
+
+    const statusFilter =
+        document.getElementById("statusFilter")
+        .value;
+
+    const dateFilter =
+        document.getElementById("dateFilter")
+        .value;
+
+    const originFilter =
+        document.getElementById("originFilter")
+        .value;
+
+
+    let filtered =
+        trucks.filter(truck => {
+
+            const searchable = [
+
+                truck.truckNo,
+                truck.driver,
+                truck.plate,
+                truck.origin,
+                truck.destination,
+                truck.booking,
+                truck.supplyType,
+                truck.remarks
+
+            ].join(" ").toLowerCase();
+
+
+            const matchSearch =
+                searchable.includes(search);
+
+            const matchStatus =
+                !statusFilter ||
+                truck.status === statusFilter;
+
+            const matchDate =
+                !dateFilter ||
+                truck.arrivalDate === dateFilter;
+
+            const matchOrigin =
+                !originFilter ||
+                truck.origin === originFilter;
+
+
+            return (
+                matchSearch &&
+                matchStatus &&
+                matchDate &&
+                matchOrigin
+            );
+
+        });
+
+
+    if (filtered.length === 0) {
+
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="15" class="empty">
+                    No truck records found.
+                </td>
+            </tr>
+        `;
+
         return;
     }
 
-    const arrivalTime = new Date().toLocaleString();
 
-    const table = document.getElementById("truckTable");
+    tbody.innerHTML =
+        filtered.map(truck => `
 
-    const row = table.insertRow();
+            <tr>
 
-    row.innerHTML = `
-        <td>${truckNumber}</td>
-        <td>${driverName}</td>
-        <td>${origin}</td>
-        <td>${arrivalTime}</td>
-        <td>${status}</td>
+                <td><strong>${escapeHTML(truck.truckNo)}</strong></td>
+
+                <td>${escapeHTML(truck.driver)}</td>
+
+                <td>${escapeHTML(truck.plate || "-")}</td>
+
+                <td>${escapeHTML(truck.truckType || "-")}</td>
+
+                <td>${escapeHTML(truck.origin)}</td>
+
+                <td>${escapeHTML(truck.destination || "-")}</td>
+
+                <td>${formatDate(truck.arrivalDate)}</td>
+
+                <td>${formatTime(truck.arrivalTime)}</td>
+
+                <td>${escapeHTML(truck.booking || "-")}</td>
+
+                <td>${escapeHTML(truck.supplyType || "-")}</td>
+
+                <td>${Number(truck.quantity).toLocaleString()}</td>
+
+                <td>
+                    <span class="status ${getStatusClass(truck.status)}">
+                        ${truck.status}
+                    </span>
+                </td>
+
+                <td>
+                    ${calculateWaitingTime(truck)}
+                </td>
+
+                <td>
+                    ${escapeHTML(truck.remarks || "-")}
+                </td>
+
+                <td>
+
+                    <div class="actions">
+
+                        <button
+                            class="btn-primary"
+                            onclick="viewDetails('${truck.id}')">
+                            View
+                        </button>
+
+                        <button
+                            class="btn-secondary"
+                            onclick="editTruck('${truck.id}')">
+                            Edit
+                        </button>
+
+                        <button
+                            class="btn-danger"
+                            onclick="deleteTruck('${truck.id}')">
+                            Delete
+                        </button>
+
+                    </div>
+
+                </td>
+
+            </tr>
+
+        `).join("");
+}
+
+
+/* =========================
+   STATUS CLASS
+========================= */
+
+function getStatusClass(status) {
+
+    return {
+
+        "Arrived": "status-arrived",
+        "Waiting": "status-waiting",
+        "Loading": "status-loading",
+        "Completed": "status-completed",
+        "Delayed": "status-delayed",
+        "Cancelled": "status-cancelled"
+
+    }[status] || "";
+}
+
+
+/* =========================
+   WAITING TIME
+========================= */
+
+function calculateWaitingTime(truck) {
+
+    if (!truck.arrivalDate || !truck.arrivalTime) {
+        return "-";
+    }
+
+    if (
+        truck.status === "Completed" ||
+        truck.status === "Cancelled"
+    ) {
+        return "-";
+    }
+
+
+    const arrival =
+        new Date(
+            `${truck.arrivalDate}T${truck.arrivalTime}`
+        );
+
+    const now = new Date();
+
+    let minutes =
+        Math.floor(
+            (now - arrival) / 60000
+        );
+
+
+    if (minutes < 0) {
+        minutes = 0;
+    }
+
+
+    const hours =
+        Math.floor(minutes / 60);
+
+    const mins =
+        minutes % 60;
+
+
+    if (hours > 0) {
+        return `${hours}h ${mins}m`;
+    }
+
+    return `${mins}m`;
+}
+
+
+/* =========================
+   DASHBOARD
+========================= */
+
+function updateDashboard() {
+
+    document.getElementById("totalCount")
+        .textContent = trucks.length;
+
+    document.getElementById("arrivedCount")
+        .textContent =
+        trucks.filter(t => t.status === "Arrived").length;
+
+    document.getElementById("waitingCount")
+        .textContent =
+        trucks.filter(t => t.status === "Waiting").length;
+
+    document.getElementById("loadingCount")
+        .textContent =
+        trucks.filter(t => t.status === "Loading").length;
+
+    document.getElementById("completedCount")
+        .textContent =
+        trucks.filter(t => t.status === "Completed").length;
+
+    document.getElementById("delayedCount")
+        .textContent =
+        trucks.filter(t => t.status === "Delayed").length;
+}
+
+
+/* =========================
+   ORIGIN FILTER
+========================= */
+
+function updateOriginFilter() {
+
+    const select =
+        document.getElementById("originFilter");
+
+    const current =
+        select.value;
+
+    const origins =
+        [...new Set(
+            trucks
+                .map(t => t.origin)
+                .filter(Boolean)
+        )]
+        .sort();
+
+
+    select.innerHTML =
+        `<option value="">All Origins</option>`;
+
+
+    origins.forEach(origin => {
+
+        const option =
+            document.createElement("option");
+
+        option.value = origin;
+        option.textContent = origin;
+
+        select.appendChild(option);
+
+    });
+
+
+    select.value = current;
+}
+
+
+/* =========================
+   VIEW DETAILS
+========================= */
+
+function viewDetails(id) {
+
+    const truck =
+        trucks.find(t => t.id === id);
+
+    if (!truck) return;
+
+
+    document.getElementById("detailsContent")
+    .innerHTML = `
+
+        <div class="detail">
+            <label>TRUCK NO.</label>
+            <strong>${escapeHTML(truck.truckNo)}</strong>
+        </div>
+
+        <div class="detail">
+            <label>DRIVER</label>
+            <strong>${escapeHTML(truck.driver)}</strong>
+        </div>
+
+        <div class="detail">
+            <label>PLATE NO.</label>
+            <strong>${escapeHTML(truck.plate || "-")}</strong>
+        </div>
+
+        <div class="detail">
+            <label>TRUCK TYPE</label>
+            <strong>${escapeHTML(truck.truckType || "-")}</strong>
+        </div>
+
+        <div class="detail">
+            <label>ORIGIN</label>
+            <strong>${escapeHTML(truck.origin)}</strong>
+        </div>
+
+        <div class="detail">
+            <label>DESTINATION</label>
+            <strong>${escapeHTML(truck.destination || "-")}</strong>
+        </div>
+
+        <div class="detail">
+            <label>ARRIVAL DATE</label>
+            <strong>${formatDate(truck.arrivalDate)}</strong>
+        </div>
+
+        <div class="detail">
+            <label>ARRIVAL TIME</label>
+            <strong>${formatTime(truck.arrivalTime)}</strong>
+        </div>
+
+        <div class="detail">
+            <label>BOOKING / TRIP NO.</label>
+            <strong>${escapeHTML(truck.booking || "-")}</strong>
+        </div>
+
+        <div class="detail">
+            <label>SUPPLY TYPE</label>
+            <strong>${escapeHTML(truck.supplyType || "-")}</strong>
+        </div>
+
+        <div class="detail">
+            <label>QUANTITY</label>
+            <strong>${Number(truck.quantity).toLocaleString()}</strong>
+        </div>
+
+        <div class="detail">
+            <label>STATUS</label>
+            <strong>${escapeHTML(truck.status)}</strong>
+        </div>
+
+        <div class="detail">
+            <label>WAITING TIME</label>
+            <strong>${calculateWaitingTime(truck)}</strong>
+        </div>
+
+        <div class="detail">
+            <label>REMARKS</label>
+            <strong>${escapeHTML(truck.remarks || "-")}</strong>
+        </div>
+
     `;
 
-    document.getElementById("truckNumber").value = "";
-    document.getElementById("driverName").value = "";
-    document.getElementById("origin").value = "";
+
+    document.getElementById("detailsModal")
+        .style.display = "flex";
 }
+
+
+/* =========================
+   CLOSE MODAL
+========================= */
+
+function closeModal() {
+
+    document.getElementById("detailsModal")
+        .style.display = "none";
+}
+
+
+window.onclick = function(event) {
+
+    const modal =
+        document.getElementById("detailsModal");
+
+    if (event.target === modal) {
+        closeModal();
+    }
+
+};
+
+
+/* =========================
+   EDIT
+========================= */
+
+function editTruck(id) {
+
+    const truck =
+        trucks.find(t => t.id === id);
+
+    if (!truck) return;
+
+
+    document.getElementById("editId").value =
+        truck.id;
+
+    document.getElementById("truckNo").value =
+        truck.truckNo;
+
+    document.getElementById("driver").value =
+        truck.driver;
+
+    document.getElementById("plate").value =
+        truck.plate;
+
+    document.getElementById("truckType").value =
+        truck.truckType;
+
+    document.getElementById("origin").value =
+        truck.origin;
+
+    document.getElementById("destination").value =
+        truck.destination;
+
+    document.getElementById("arrivalDate").value =
+        truck.arrivalDate;
+
+    document.getElementById("arrivalTime").value =
+        truck.arrivalTime;
+
+    document.getElementById("booking").value =
+        truck.booking;
+
+    document.getElementById("supplyType").value =
+        truck.supplyType;
+
+    document.getElementById("quantity").value =
+        truck.quantity;
+
+    document.getElementById("status").value =
+        truck.status;
+
+    document.getElementById("remarks").value =
+        truck.remarks;
+
+
+    document.getElementById("saveBtn")
+        .textContent = "💾 Update Truck";
+
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* =========================
+   DELETE
+========================= */
+
+function deleteTruck(id) {
+
+    const truck =
+        trucks.find(t => t.id === id);
+
+    if (!truck) return;
+
+
+    const confirmDelete =
+        confirm(
+            `Delete truck ${truck.truckNo}?`
+        );
+
+
+    if (!confirmDelete) return;
+
+
+    trucks =
+        trucks.filter(t => t.id !== id);
+
+    saveData();
+
+}
+
+
+/* =========================
+   RESET FORM
+========================= */
+
+function resetForm() {
+
+    document.getElementById("truckForm")
+        .reset();
+
+    document.getElementById("editId")
+        .value = "";
+
+    document.getElementById("saveBtn")
+        .textContent = "➕ Add Truck";
+
+    setDefaultDateTime();
+}
+
+
+/* =========================
+   FORMAT DATE
+========================= */
+
+function formatDate(date) {
+
+    if (!date) return "-";
+
+    const d =
+        new Date(date + "T00:00:00");
+
+    return d.toLocaleDateString(
+        "en-PH",
+        {
+            month: "short",
+            day: "2-digit",
+            year: "numeric"
+        }
+    );
+}
+
+
+/* =========================
+   FORMAT TIME
+========================= */
+
+function formatTime(time) {
+
+    if (!time) return "-";
+
+    const [hour, minute] =
+        time.split(":");
+
+    const d =
+        new Date();
+
+    d.setHours(
+        Number(hour),
+        Number(minute),
+        0
+    );
+
+    return d.toLocaleTimeString(
+        "en-PH",
+        {
+            hour: "2-digit",
+            minute: "2-digit"
+        }
+    );
+}
+
+
+/* =========================
+   ESCAPE HTML
+========================= */
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+
+/* =========================
+   EXPORT CSV
+========================= */
+
+function exportCSV() {
+
+    if (trucks.length === 0) {
+
+        alert("No truck records to export.");
+
+        return;
+    }
+
+
+    const headers = [
+
+        "Truck No.",
+        "Driver",
+        "Plate No.",
+        "Truck Type",
+        "Origin",
+        "Destination",
+        "Arrival Date",
+        "Arrival Time",
+        "Booking / Trip No.",
+        "Supply Type",
+        "Quantity",
+        "Status",
+        "Waiting Time",
+        "Remarks"
+
+    ];
+
+
+    const rows =
+        trucks.map(t => [
+
+            t.truckNo,
+            t.driver,
+            t.plate,
+            t.truckType,
+            t.origin,
+            t.destination,
+            t.arrivalDate,
+            t.arrivalTime,
+            t.booking,
+            t.supplyType,
+            t.quantity,
+            t.status,
+            calculateWaitingTime(t),
+            t.remarks
+
+        ]);
+
+
+    const csv =
+        [headers, ...rows]
+        .map(row =>
+            row.map(value =>
+                `"${String(value ?? "")
+                    .replace(/"/g, '""')}"`
+            ).join(",")
+        )
+        .join("\n");
+
+
+    const blob =
+        new Blob(
+            [csv],
+            {
+                type: "text/csv;charset=utf-8;"
+            }
+        );
+
+
+    const url =
+        URL.createObjectURL(blob);
+
+    const link =
+        document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+        `truck-monitoring-${new Date()
+            .toISOString()
+            .slice(0,10)}.csv`;
+
+    link.click();
+
+    URL.revokeObjectURL(url);
+}
+
+
+/* =========================
+   AUTO REFRESH
+========================= */
+
+setInterval(() => {
+
+    renderTable();
+    updateDashboard();
+
+}, 30000);
+
+
+/* =========================
+   INITIAL LOAD
+========================= */
+
+renderTable();
+updateDashboard();
+updateOriginFilter();
 
 </script>
 
