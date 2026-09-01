@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Truck Arrival Monitoring System</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f6f8;
+        }
+
+        header {
+            background: #222;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        input, select, button {
+            padding: 10px;
+            margin: 5px;
+        }
+
+        button {
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background: #eee;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Truck Arrival Monitoring System</h1>
+    <p>Truck Arrival & Supply Monitoring</p>
+</header>
+
+<div class="container">
+
+    <div class="card">
+        <h2>Truck Arrival Entry</h2>
+
+        <input type="text" id="truckNumber" placeholder="Truck Number">
+
+        <input type="text" id="driverName" placeholder="Driver Name">
+
+        <input type="text" id="origin" placeholder="Origin">
+
+        <select id="status">
+            <option value="Arrived">Arrived</option>
+            <option value="Waiting">Waiting</option>
+            <option value="Loading">Loading</option>
+            <option value="Completed">Completed</option>
+        </select>
+
+        <button onclick="addTruck()">Add Truck</button>
+    </div>
+
+    <div class="card">
+        <h2>Truck Monitoring</h2>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Truck No.</th>
+                    <th>Driver</th>
+                    <th>Origin</th>
+                    <th>Arrival Time</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody id="truckTable">
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+
+function addTruck() {
+
+    const truckNumber = document.getElementById("truckNumber").value;
+    const driverName = document.getElementById("driverName").value;
+    const origin = document.getElementById("origin").value;
+    const status = document.getElementById("status").value;
+
+    if (!truckNumber || !driverName || !origin) {
+        alert("Please complete all fields.");
+        return;
+    }
+
+    const arrivalTime = new Date().toLocaleString();
+
+    const table = document.getElementById("truckTable");
+
+    const row = table.insertRow();
+
+    row.innerHTML = `
+        <td>${truckNumber}</td>
+        <td>${driverName}</td>
+        <td>${origin}</td>
+        <td>${arrivalTime}</td>
+        <td>${status}</td>
+    `;
+
+    document.getElementById("truckNumber").value = "";
+    document.getElementById("driverName").value = "";
+    document.getElementById("origin").value = "";
+}
+
+</script>
+
+</body>
+</html>
